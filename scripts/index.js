@@ -26,7 +26,7 @@ const initialCards = [
 ];
 
 initialCards.forEach(function (card) {
-  console.log(card);
+  console.log(card.name);
 });
 
 const profileEditBtn = document.querySelector(".profile__edit-button");
