@@ -115,13 +115,13 @@ function getCardElement(
   return cardElement;
 }
 
-function renderCardElement(name, link) {
+function renderCard(name, link, container) {
   const cardEl = getCardElement(name, link);
-  cardContainer.prepend(cardEl);
+  container.prepend(cardEl);
 }
 
 initialCards.forEach((card) => {
-  renderCardElement(card.name, card.link);
+  renderCard(card.name, card.link, cardContainer);
 });
 
 profileAddBtn.addEventListener("click", () => openModal(profileAddModal));
@@ -130,7 +130,7 @@ closeImageModal.addEventListener("click", () => closeModal(imageModal));
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
-  renderCardElement(newCardTitleInput.value, newCardImageInput.value);
+  renderCard(newCardTitleInput.value, newCardImageInput.value, cardContainer);
   closeModal(profileAddModal);
   newCardTitleInput.value = "";
   newCardImageInput.value = "";
