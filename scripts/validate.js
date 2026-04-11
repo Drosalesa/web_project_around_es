@@ -1,19 +1,19 @@
 const showInputError = (input, errorMessage) => {
   const errorEl = input.parentElement.querySelector(
-    `.${input.name}__input-error`,
+    `.popup__input_type_${input.name}_error`,
   );
-  input.classList.add("popup__input-error");
+  input.classList.add("popup__input_error_format");
   errorEl.textContent = errorMessage;
-  errorEl.classList.add("form__input-error-active");
+  errorEl.classList.add("popup__input_error_active");
 };
 
 const hideInputError = (input) => {
   const errorEl = input.parentElement.querySelector(
-    `.${input.name}__input-error`,
+    `.popup__input_type_${input.name}_error`,
   );
-  input.classList.remove("popup__input-error");
+  input.classList.remove("popup__input_error_format");
   errorEl.textContent = "Correcto";
-  errorEl.classList.remove("form__input-error-active");
+  errorEl.classList.remove("popup__input_error_active");
 };
 
 function toggleFormButton(form, button) {
