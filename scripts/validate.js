@@ -1,6 +1,6 @@
 const showInputError = (input, errorMessage) => {
   const errorEl = input.parentElement.querySelector(
-    `.popup__input_type_${input.name}_error`,
+    `.popup__${input.name}_error`,
   );
   input.classList.add("popup__input_error_format");
   errorEl.textContent = errorMessage;
@@ -9,7 +9,7 @@ const showInputError = (input, errorMessage) => {
 
 const hideInputError = (input) => {
   const errorEl = input.parentElement.querySelector(
-    `.popup__input_type_${input.name}_error`,
+    `.popup__${input.name}_error`,
   );
   input.classList.remove("popup__input_error_format");
   errorEl.textContent = "Correcto";
