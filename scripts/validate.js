@@ -24,10 +24,24 @@ function toggleFormButton(form, button) {
   }
 }
 
-function cleanInputs(inputs) {
+function resetValidation(inputs) {
   inputs.forEach((input) => {
     hideInputError(input);
   });
 }
 
-export { toggleFormButton, showInputError, hideInputError, cleanInputs };
+function setEventListners(modal) {
+  modal.addEventListener("click", (evt) => {
+    if (evt.target.id === modal.id) {
+      modal.classList.remove("popup_is-opened");
+    }
+  });
+}
+
+export {
+  toggleFormButton,
+  showInputError,
+  hideInputError,
+  resetValidation,
+  setEventListners,
+};

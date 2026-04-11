@@ -14,4 +14,6 @@
 
 # Los módulos pueden cerrarse con el botón de salir, presionando fuera del contenido del módulo o presionando la tecla ESC.
 
+# La validación se realizó utilizando JS modular, con la lógica en el archivo validate.js
+
 # https://drosalesa.github.io/web_project_around_es/

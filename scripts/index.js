@@ -64,11 +64,13 @@ const saveCardBtn = profileAddModal.querySelector(".popup__button");
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  setEventListners(modal);
+  resetValidation(modal.querySelectorAll(".popup__input"));
+  document.addEventListener("keydown", closeEscape);
 }
 
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
-  cleanInputs(modal.querySelectorAll(".popup__input"));
 }
 
 function fillProfileForm() {
@@ -88,64 +90,55 @@ function handleProfileFormSubmit(evt) {
   closeModal(profileEditModal);
 }
 
-function setEventListners() {
-  profileEditBtn.addEventListener("click", () => {
-    handleOpenEditModal(profileEditModal);
-    toggleFormButton(editProfileForm, saveProfileBtn);
-  });
-  profileEditModal.addEventListener("submit", handleProfileFormSubmit);
-  closeEditModalBtn.addEventListener("click", () => {
-    closeModal(profileEditModal);
-  });
-  profileAddBtn.addEventListener("click", () => {
-    newCardForm.reset();
-    openModal(profileAddModal);
-    toggleFormButton(newCardForm, saveCardBtn);
-  });
-  closeAddModalBtn.addEventListener("click", () => {
+const closeEscape = (evt) => {
+  if (evt.key === "Escape") {
     closeModal(profileAddModal);
-  });
-  closeImageModal.addEventListener("click", () => closeModal(imageModal));
-  profileAddModal.addEventListener("submit", handleCardFormSubmit);
-  editProfileInputs.forEach((input) => {
-    input.addEventListener("input", () => {
-      if (!input.validity.valid) {
-        showInputError(input, input.validationMessage);
-        toggleFormButton(editProfileForm, saveProfileBtn);
-      } else {
-        hideInputError(input);
-        toggleFormButton(editProfileForm, saveProfileBtn);
-      }
-    });
-  });
-  newCardInputs.forEach((input) => {
-    input.addEventListener("input", () => {
-      if (!input.validity.valid) {
-        showInputError(input, input.validationMessage);
-        toggleFormButton(newCardForm, saveCardBtn);
-      } else {
-        hideInputError(input);
-        toggleFormButton(newCardForm, saveCardBtn);
-      }
-    });
-  });
-  profileEditModal.addEventListener("click", (evt) => {
-    if (evt.target.id === "edit-popup") {
-      closeModal(profileEditModal);
+    closeModal(profileEditModal);
+    closeModal(imageModal);
+    document.removeEventListener("keydown", closeEscape);
+  }
+};
+
+profileEditBtn.addEventListener("click", () => {
+  handleOpenEditModal(profileEditModal);
+  toggleFormButton(editProfileForm, saveProfileBtn);
+});
+profileEditModal.addEventListener("submit", handleProfileFormSubmit);
+closeEditModalBtn.addEventListener("click", () => {
+  closeModal(profileEditModal);
+});
+profileAddBtn.addEventListener("click", () => {
+  newCardForm.reset();
+  openModal(profileAddModal);
+  toggleFormButton(newCardForm, saveCardBtn);
+});
+closeAddModalBtn.addEventListener("click", () => {
+  closeModal(profileAddModal);
+});
+closeImageModal.addEventListener("click", () => closeModal(imageModal));
+profileAddModal.addEventListener("submit", handleCardFormSubmit);
+editProfileInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+      toggleFormButton(editProfileForm, saveProfileBtn);
+    } else {
+      hideInputError(input);
+      toggleFormButton(editProfileForm, saveProfileBtn);
     }
   });
-  profileAddModal.addEventListener("click", (evt) => {
-    if (evt.target.id === "new-card-popup") {
-      closeModal(profileAddModal);
+});
+newCardInputs.forEach((input) => {
+  input.addEventListener("input", () => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+      toggleFormButton(newCardForm, saveCardBtn);
+    } else {
+      hideInputError(input);
+      toggleFormButton(newCardForm, saveCardBtn);
     }
   });
-  document.addEventListener("keydown", (evt) => {
-    if (evt.key === "Escape") {
-      closeModal(profileAddModal);
-      closeModal(profileEditModal);
-    }
-  });
-}
+});
 
 function getCardElement(
   name = "Sin título",
@@ -192,11 +185,10 @@ function handleCardFormSubmit(evt) {
   newCardImageInput.value = "";
 }
 
-setEventListners();
-
 import {
   toggleFormButton,
   showInputError,
   hideInputError,
-  cleanInputs,
+  resetValidation,
+  setEventListners,
 } from "./validate.js";
