@@ -4,16 +4,10 @@
 
 # Proyecto 8
 
-# El sitio ahora valida los formularios para editar el perfil y agregar nuevas targetas.
+# El sitio mantiene toda la funcionalidad anterior pero se realizó utilizando TypeScript y programación orientada a objetos
 
-# Se utilizaron event listeners de tipo input en cada entrada del formulario para verificar que la entrada es correcta.
+# Se crearon clases para las tarjetas, los modulos y la validación de formularios
 
-# El botón de guardar se activa hasta que todas las entradas del módulo son válidas, de lo contrario se desactiva. Esto se logró utilizando pseudo clases.
-
-# Los mensajes de error se agregaron con span
-
-# Los módulos pueden cerrarse con el botón de salir, presionando fuera del contenido del módulo o presionando la tecla ESC.
-
-# La validación se realizó utilizando JS modular, con la lógica en el archivo validate.js
+# En el archivo index.ts únicamente se relacionan las clases
 
 # https://drosalesa.github.io/web_project_around_es/
