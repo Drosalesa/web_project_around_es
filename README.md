@@ -2,7 +2,7 @@
 
 # Página para agregar, eliminar y dar me gusta a fotos de lugares visitados "Around The US".
 
-# Proyecto 7
+# Proyecto 8
 
 # El sitio ahora valida los formularios para editar el perfil y agregar nuevas targetas.
 
