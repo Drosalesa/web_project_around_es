@@ -50,4 +50,3 @@ editProfileBtn?.addEventListener("click", () => {
     editProfileFormValidator.enableValidation();
     editProfilePopup.setEventListeners();
 });
-//# sourceMappingURL=index.js.map

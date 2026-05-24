@@ -7,4 +7,3 @@ export class PopupWithImage extends Popup {
         this.popupElement.querySelector(".popup__caption").textContent = name;
     }
 }
-//# sourceMappingURL=PopupWithImage.js.map

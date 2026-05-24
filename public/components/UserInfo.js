@@ -19,4 +19,3 @@ export class UserInfo {
         this.userJob.textContent = description;
     }
 }
-//# sourceMappingURL=UserInfo.js.map

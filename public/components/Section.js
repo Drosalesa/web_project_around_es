@@ -16,4 +16,3 @@ export class Section {
         this.container.prepend(element);
     }
 }
-//# sourceMappingURL=Section.js.map

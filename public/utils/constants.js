@@ -41,4 +41,3 @@ export const userSelector = {
     nameSelector: ".profile__title",
     descriptionSelector: ".profile__description"
 };
-//# sourceMappingURL=constants.js.map

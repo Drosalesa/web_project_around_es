@@ -59,4 +59,3 @@ export class FormValidator {
         this.setEventListeners();
     }
 }
-//# sourceMappingURL=FormValidator.js.map

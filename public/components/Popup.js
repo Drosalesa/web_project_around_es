@@ -26,4 +26,3 @@ export class Popup {
         document.addEventListener("keydown", this.handleEscClose);
     }
 }
-//# sourceMappingURL=Popup.js.map
