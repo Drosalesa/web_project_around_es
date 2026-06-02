@@ -42,5 +42,6 @@ export const editProfileSelector = "#edit-popup"
 
 export const userSelector = {
   nameSelector: ".profile__title",
-  descriptionSelector: ".profile__description"
+  descriptionSelector: ".profile__description",
+  avatarSelector: ".profile__image"
 };

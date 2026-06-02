@@ -2,13 +2,13 @@ export interface FormValues {
     [key: string]: string;
 }
 
-export interface CardData extends FormValues {
+export interface CardData {
     name: string;
     link: string;
 };
 
 export interface UserValues extends FormValues{
-    name: string;
-    description: string;
+    name: string,
+    description: string,
+    avatar: string,
 }
-

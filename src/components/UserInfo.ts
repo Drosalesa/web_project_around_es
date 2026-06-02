@@ -3,26 +3,25 @@ import type { UserValues } from "../types/types";
 export class UserInfo {
     private userName: HTMLElement;
     private userJob: HTMLElement;
+    private userAvatar: HTMLImageElement;
 
-    constructor({nameSelector, descriptionSelector}: {nameSelector: string, descriptionSelector: string}) {
+    constructor({nameSelector, descriptionSelector, avatarSelector}: {nameSelector: string, descriptionSelector: string, avatarSelector: string}) {
         this.userName = document.querySelector(nameSelector) as HTMLElement;
         this.userJob = document.querySelector(descriptionSelector) as HTMLElement;
+        this.userAvatar = document.querySelector(avatarSelector) as HTMLImageElement;
     }
 
     getUserInfo(): UserValues {
-        const userValues: UserValues = {
-            name: "",
-            description: "",
+        return {
+            name: this.userName.textContent,
+            description: this.userJob.textContent,
+            avatar: this.userAvatar.src
         };
-
-        userValues.name = this.userName.textContent;
-        userValues.description = this.userJob.textContent;
-
-        return userValues;
     }
 
-    setUserInfo(name: string, description: string): void {
+    setUserInfo({name, description, avatar}: {name: string, description: string, avatar: string}): void {
         this.userName.textContent = name;
         this.userJob.textContent = description;
+        this.userAvatar.src = avatar;
     }
 }
