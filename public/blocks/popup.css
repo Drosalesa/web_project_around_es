@@ -52,7 +52,7 @@
 .popup__content {
   max-width: 430px;
   width: 100%;
-  min-height: 323px;
+  /*min-height: 323px;*/
   background-color: #fff;
   border-radius: 10px;
   position: relative;
@@ -61,7 +61,7 @@
 }
 
 .popup__form {
-  margin-top: 27px;
+  margin: 0;
 }
 
 .popup__input {
@@ -81,7 +81,8 @@
 }*/
 
 .popup__title {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 27px;
   font-size: 24px;
   font-weight: 900;
   line-height: 30px;

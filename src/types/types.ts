@@ -12,3 +12,12 @@ export interface UserValues extends FormValues{
     description: string,
     avatar: string,
 }
+
+export interface ApiCard {
+    isLiked: boolean,
+    _id: string,
+    name: string,
+    link: string,
+    owner: string,
+    createdAt: string
+}
