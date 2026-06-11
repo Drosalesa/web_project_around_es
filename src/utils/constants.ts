@@ -40,9 +40,12 @@ export const addCardBtn = document.querySelector(".profile__add-button")
 export const newCardSelector = "#new-card-popup";
 export const editProfileSelector = "#edit-popup";
 export const delConfSelector = "#confirmation-popup";
+export const editAvatarSelector = "#avatar-popup";
 
 export const userSelector = {
   nameSelector: ".profile__title",
   descriptionSelector: ".profile__description",
   avatarSelector: ".profile__image"
 };
+
+export const avatar = document.querySelector(userSelector.avatarSelector);

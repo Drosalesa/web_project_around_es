@@ -1,7 +1,7 @@
 import { Card } from "./components/Card.js";
 import { Section } from "./components/Section.js";
 import { UserInfo } from "./components/UserInfo.js";
-import { initialCards, defaultFormConfig, cardsContainer, cardTemplate, popupImageSelector, addCardBtn, editProfileBtn, newCardSelector, editProfileSelector, userSelector, delConfSelector } from "./utils/constants.js";
+import { defaultFormConfig, cardsContainer, cardTemplate, popupImageSelector, addCardBtn, editProfileBtn, newCardSelector, editProfileSelector, userSelector, delConfSelector, avatar, editAvatarSelector } from "./utils/constants.js";
 import { PopupWithImage } from "./components/PopupWithImage.js";
 import { PopupWithForm } from "./components/PopupWithForm.js";
 import { PopupWithConfirmation } from "./components/PopupWithConfirmation.js";
@@ -10,7 +10,7 @@ import { Api } from "./components/Api.js";
 const userInfo = new UserInfo(userSelector);
 const apiResponse = new Api("https://around-api.es.tripleten-services.com/v1/");
 try {
-    const apiUser = await apiResponse.getUser();
+    let apiUser = await apiResponse.getUser();
     userInfo.setUserInfo({
         name: apiUser.name,
         description: apiUser.about,
@@ -86,7 +86,7 @@ try {
         newCardFormValidator.enableValidation();
         newCardPopup.setEventListeners();
     });
-    const editProfilePopup = new PopupWithForm((data) => {
+    const editProfilePopup = new PopupWithForm(async (data) => {
         userInfo.setUserInfo({
             name: data.name,
             description: data.description,
@@ -96,6 +96,7 @@ try {
             name: data.name,
             description: data.description
         });
+        apiUser = await apiResponse.getUser();
     }, editProfileSelector);
     const editProfileFormValidator = new FormValidator(defaultFormConfig, editProfilePopup.getForm());
     editProfileBtn?.addEventListener("click", () => {
@@ -104,6 +105,22 @@ try {
         editProfileFormValidator.resetValidation();
         editProfileFormValidator.enableValidation();
         editProfilePopup.setEventListeners();
+    });
+    const editAvatarForm = new PopupWithForm(async (data) => {
+        apiResponse.editAvatar(data.avatar);
+        userInfo.setUserInfo({
+            name: apiUser.name,
+            description: apiUser.about,
+            avatar: data.avatar,
+        });
+        apiUser = await apiResponse.getUser();
+    }, editAvatarSelector);
+    const editAvatarFormValidator = new FormValidator(defaultFormConfig, editAvatarForm.getForm());
+    avatar?.addEventListener("click", () => {
+        editAvatarForm.open();
+        editAvatarForm.setEventListeners();
+        editAvatarFormValidator.resetValidation();
+        editAvatarFormValidator.enableValidation();
     });
 }
 catch (error) {
