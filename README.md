@@ -2,7 +2,7 @@
 
 # Página para agregar, eliminar y dar me gusta a fotos de lugares visitados "Around The US".
 
-# Proyecto 8
+# Proyecto 9
 
 # El sitio valida los formularios para editar el perfil y agregar nuevas tarjetas.
 
@@ -19,5 +19,15 @@
 # Se crearon clases para las tarjetas, los modulos y la validación de formularios
 
 # El archivo index.ts únicamente contiene las relaciones entre las clases
+
+# Se creó una clase Api.ts para manejar todas las solicitudes al servidor, utilizando async y bloques try/catch/finally
+
+# La información de usuario, tarjetas y likes se carga desde el servidor, todas las modificaciones se envían también al servidor
+
+# Se agregó la función de editar imagen de avatar y un hover sobre la imagen
+
+# Se agregó un popup de confirmación al borrar tarjetas
+
+# Se generó feedback para el usuario mientras se cargan las respuestas del servidor
 
 # https://drosalesa.github.io/web_project_around_es/
