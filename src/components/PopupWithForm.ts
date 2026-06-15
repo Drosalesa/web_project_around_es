@@ -6,12 +6,14 @@ export class PopupWithForm extends Popup {
     private handleFormSubmit: (data: FormValues) => void;
     private inputList: NodeListOf<HTMLInputElement>;
     private popupForm: HTMLFormElement;
+    private popupButton: HTMLButtonElement;
 
     constructor(handleFormSubmit: (data: FormValues) => void, popupSelector: string) {
         super(popupSelector);
         this.handleFormSubmit = handleFormSubmit;
         this.popupForm = this.popupElement.querySelector(".popup__form") as HTMLFormElement;
         this.inputList = this.popupForm.querySelectorAll(".popup__input");
+        this.popupButton = this.popupForm.querySelector(".popup__button") as HTMLButtonElement;
     }
 
     private getInputValues(): FormValues {
@@ -25,8 +27,6 @@ export class PopupWithForm extends Popup {
     private handleSubmit = (evt: SubmitEvent) => {
         evt.preventDefault();
         this.handleFormSubmit(this.getInputValues());
-        this.popupForm.reset();
-        this.close();
         this.popupForm.removeEventListener("submit", this.handleSubmit);
     }
 
@@ -58,5 +58,17 @@ export class PopupWithForm extends Popup {
         this.inputList.forEach((input) => {
             input.value = values[input.name];
         });
+    }
+
+    renderLoading(isLoading: boolean) {
+        if(isLoading) {
+            this.popupButton.textContent = "Guardando...";
+        } else {
+            this.popupButton.textContent = "Guardar";
+        }
+    }
+
+    resetForm() {
+        this.popupForm.reset();
     }
 }

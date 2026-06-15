@@ -9,16 +9,21 @@ import { FormValidator } from "./components/FormValidator.js";
 import { Api } from "./components/Api.js";
 const userInfo = new UserInfo(userSelector);
 const apiResponse = new Api("https://around-api.es.tripleten-services.com/v1/");
+let apiUser;
+let apiCards;
+let cardList;
 try {
-    let apiUser = await apiResponse.getUser();
+    [apiUser, apiCards] = await Promise.all([
+        apiResponse.getUser(),
+        apiResponse.getCards(),
+    ]);
     userInfo.setUserInfo({
         name: apiUser.name,
         description: apiUser.about,
-        avatar: apiUser.avatar
+        avatar: apiUser.avatar,
     });
-    const apiCards = await apiResponse.getCards();
-    console.log(apiCards.reverse());
-    const cardList = new Section({
+    apiCards.reverse();
+    cardList = new Section({
         items: apiCards,
         renderer: (item) => {
             const card = new Card(item, cardTemplate, () => {
@@ -26,24 +31,39 @@ try {
                 popupImage.open();
                 popupImage.setEventListeners();
             }, async () => {
-                const newInfo = await apiResponse.toggleLike(card.getCardInfo()._id, card.getCardInfo().isLiked);
-                card.updateCardInfo(newInfo);
-                console.log(card.getCardInfo());
+                try {
+                    const newInfo = await apiResponse.toggleLike(card.getCardInfo()._id, card.getCardInfo().isLiked);
+                    card.updateCardInfo(newInfo);
+                }
+                catch (err) {
+                    console.log(err);
+                }
             }, () => {
-                const confirmationPopup = new PopupWithConfirmation(() => {
-                    apiResponse.deleteCard(card.getCardInfo()._id);
-                    card.removeCard();
-                    confirmationPopup.close();
+                const confirmationPopup = new PopupWithConfirmation(async () => {
+                    try {
+                        await apiResponse.deleteCard(card.getCardInfo()._id);
+                        card.removeCard();
+                        confirmationPopup.close();
+                    }
+                    catch (err) {
+                        console.log(err);
+                    }
                 }, delConfSelector);
                 confirmationPopup.open();
                 confirmationPopup.setEventListeners();
             });
             const cardElement = card.getCardElement();
             cardList.addItem(cardElement);
-        }
+        },
     }, cardsContainer);
     cardList.renderItems();
-    const newCardPopup = new PopupWithForm(async (data) => {
+}
+catch (error) {
+    console.error("Error al cargar datos iniciales:", error);
+}
+const newCardPopup = new PopupWithForm(async (data) => {
+    newCardPopup.renderLoading(true);
+    try {
         const card = new Card({
             name: data.name,
             link: data.link,
@@ -78,51 +98,74 @@ try {
             link: data.link
         });
         card.updateCardInfo(cardInfo);
-    }, newCardSelector);
-    const newCardFormValidator = new FormValidator(defaultFormConfig, newCardPopup.getForm());
-    addCardBtn?.addEventListener("click", () => {
-        newCardPopup.open();
-        newCardFormValidator.resetValidation();
-        newCardFormValidator.enableValidation();
-        newCardPopup.setEventListeners();
-    });
-    const editProfilePopup = new PopupWithForm(async (data) => {
+        newCardPopup.close();
+        newCardPopup.resetForm();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        newCardPopup.renderLoading(false);
+    }
+}, newCardSelector);
+const newCardFormValidator = new FormValidator(defaultFormConfig, newCardPopup.getForm());
+addCardBtn?.addEventListener("click", () => {
+    newCardPopup.open();
+    newCardPopup.setEventListeners();
+    newCardFormValidator.resetValidation();
+    newCardFormValidator.enableValidation();
+});
+const editProfilePopup = new PopupWithForm(async (data) => {
+    editProfilePopup.renderLoading(true);
+    try {
         userInfo.setUserInfo({
             name: data.name,
             description: data.description,
             avatar: apiUser.avatar
         });
-        apiResponse.patchUser({
+        await apiResponse.patchUser({
             name: data.name,
             description: data.description
         });
-        apiUser = await apiResponse.getUser();
-    }, editProfileSelector);
-    const editProfileFormValidator = new FormValidator(defaultFormConfig, editProfilePopup.getForm());
-    editProfileBtn?.addEventListener("click", () => {
-        editProfilePopup.open();
-        editProfilePopup.fillForm(userInfo.getUserInfo());
-        editProfileFormValidator.resetValidation();
-        editProfileFormValidator.enableValidation();
-        editProfilePopup.setEventListeners();
-    });
-    const editAvatarForm = new PopupWithForm(async (data) => {
-        apiResponse.editAvatar(data.avatar);
+        editProfilePopup.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        editProfilePopup.renderLoading(false);
+    }
+}, editProfileSelector);
+const editProfileFormValidator = new FormValidator(defaultFormConfig, editProfilePopup.getForm());
+editProfileBtn?.addEventListener("click", () => {
+    editProfilePopup.open();
+    editProfilePopup.setEventListeners();
+    editProfilePopup.fillForm(userInfo.getUserInfo());
+    editProfileFormValidator.resetValidation();
+    editProfileFormValidator.enableValidation();
+});
+const editAvatarForm = new PopupWithForm(async (data) => {
+    editAvatarForm.renderLoading(true);
+    try {
+        await apiResponse.editAvatar(data.avatar);
         userInfo.setUserInfo({
             name: apiUser.name,
             description: apiUser.about,
             avatar: data.avatar,
         });
-        apiUser = await apiResponse.getUser();
-    }, editAvatarSelector);
-    const editAvatarFormValidator = new FormValidator(defaultFormConfig, editAvatarForm.getForm());
-    avatar?.addEventListener("click", () => {
-        editAvatarForm.open();
-        editAvatarForm.setEventListeners();
-        editAvatarFormValidator.resetValidation();
-        editAvatarFormValidator.enableValidation();
-    });
-}
-catch (error) {
-    console.log(`error: ${error}`);
-}
+        editAvatarForm.close();
+    }
+    catch (err) {
+        console.log(err);
+    }
+    finally {
+        editAvatarForm.renderLoading(false);
+    }
+}, editAvatarSelector);
+const editAvatarFormValidator = new FormValidator(defaultFormConfig, editAvatarForm.getForm());
+avatar?.addEventListener("click", () => {
+    editAvatarForm.open();
+    editAvatarForm.setEventListeners();
+    editAvatarFormValidator.resetValidation();
+    editAvatarFormValidator.enableValidation();
+});

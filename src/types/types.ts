@@ -21,3 +21,10 @@ export interface ApiCard {
     owner: string,
     createdAt: string
 }
+
+export interface ApiUserInfo {
+  name: string;
+  about: string;
+  avatar: string;
+  _id: string;
+}

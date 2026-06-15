@@ -55,7 +55,6 @@ export class Card {
     getCardElement(): HTMLElement{
         if(this.cardInfo.isLiked) this.toggleLikeBtn();
         this.setEventListeners();
-        console.log(this.cardInfo);
         return this.cardElement;
     }
 

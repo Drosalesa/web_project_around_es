@@ -1,171 +1,105 @@
-import type { ApiCard } from "../types/types"
-
-interface ApiUserInfo {
-    name: string,
-    about: string,
-    avatar: string,
-    "_id": string
-}
+import type { ApiCard } from "../types/types.js";
+import type {ApiUserInfo } from "../types/types.js"
 
 export class Api {
-    private apiUrl: string;
+  private readonly apiUrl: string;
+  private readonly headers: HeadersInit;
 
-    constructor(apiUrl: string) {
-        this.apiUrl = apiUrl;
+  constructor(apiUrl: string) {
+    this.apiUrl = apiUrl;
+
+    this.headers = {
+      authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
+      "Content-Type": "application/json",
+    };
+  }
+
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const res = await fetch(`${this.apiUrl}${endpoint}`, {
+      headers: this.headers,
+      ...options,
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
     }
 
-    async getUser(): Promise<ApiUserInfo> {
-        try {
-            const res: Response = await fetch(`${this.apiUrl}users/me`, {
-                headers: {
-                    authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a"
-                }
-            });
+    return res.json() as Promise<T>;
+  }
 
-            if (!res.ok) {
-                throw new Error(res.status.toString());
-            }                
-            
-            return await res.json() as ApiUserInfo;
+  getUser(): Promise<ApiUserInfo> {
+    return this.request<ApiUserInfo>("users/me");
+  }
 
-        } catch (err: unknown) {
-            console.log(err);
-            throw err;
-        }
+  getCards(): Promise<ApiCard[]> {
+    return this.request<ApiCard[]>("cards");
+  }
+
+  patchUser({
+    name,
+    description,
+  }: {
+    name: string;
+    description: string;
+  }): Promise<ApiUserInfo> {
+    return this.request<ApiUserInfo>("users/me", {
+      method: "PATCH",
+      body: JSON.stringify({
+        name,
+        about: description,
+      }),
+    });
+  }
+
+  postNewCard({
+    name,
+    link,
+  }: {
+    name: string;
+    link: string;
+  }): Promise<ApiCard> {
+    return this.request<ApiCard>("cards", {
+      method: "POST",
+      body: JSON.stringify({ name, link }),
+    });
+  }
+
+  toggleLike(cardId: string, isLiked: boolean): Promise<ApiCard> {
+    return isLiked
+      ? this.removeLike(cardId)
+      : this.addLike(cardId);
+  }
+
+  addLike(cardId: string): Promise<ApiCard> {
+    return this.request<ApiCard>(`cards/${cardId}/likes`, {
+      method: "PUT",
+    });
+  }
+
+  removeLike(cardId: string): Promise<ApiCard> {
+    return this.request<ApiCard>(`cards/${cardId}/likes`, {
+      method: "DELETE",
+    });
+  }
+
+  async deleteCard(cardId: string): Promise<void> {
+    const res = await fetch(`${this.apiUrl}cards/${cardId}`, {
+      method: "DELETE",
+      headers: this.headers,
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}`);
     }
+  }
 
-    async getCards(): Promise<ApiCard[]> {
-        try {
-            const res: Response = await fetch(`${this.apiUrl}cards`, {
-                headers: {
-                    authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a"
-                }
-            });
-
-            if (!res.ok) {
-                throw new Error(res.status.toString());
-            }                
-            
-            return await res.json() as ApiCard[];
-
-        } catch (err: unknown) {
-            console.log(err);
-            throw err;
-        }
-    }
-
-    async patchUser({name, description}: {name: string, description: string}): Promise<ApiUserInfo> {
-        try {
-            const res: Response = await fetch (`${this.apiUrl}users/me`, {
-                method: "PATCH",
-                headers: {
-                    authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                    "Content-Type": "application/json; charset=UTF-8"
-                },
-                body: JSON.stringify({
-                    name: name,
-                    about: description
-                })
-            });
-
-            if (!res.ok) {
-                throw new Error(res.status.toString());
-            }
-
-            const data: ApiUserInfo = await res.json();
-            return data;
-        } catch (err) {
-            console.log(err);
-            throw err
-        }
-    }
-
-    async postNewCard({name, link}: {name: string, link: string}): Promise<ApiCard> {
-
-        const res: Response = await fetch(`${this.apiUrl}cards`, {
-            method: "POST",
-            headers: {
-                authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                "Content-Type": "application/json; charset=UTF-8" 
-            },
-            body: JSON.stringify({
-                name: name,
-                link: link
-            })
-        });
-
-        if (!res.ok) {
-            throw new Error(res.status.toString());
-         }
-
-         const data: ApiCard = await res.json();
-        return data;
-    }
-
-    async toggleLike(cardId: string, isLiked: boolean): Promise<ApiCard> {
-        if(isLiked){
-            return this.removeLike(cardId);
-        }
-
-        return this.addLike(cardId);
-    }
-
-    async addLike(cardId: string): Promise<ApiCard> {
-        
-        const res: Response = await fetch(`${this.apiUrl}cards/${cardId}/likes`, {
-            method: "PUT",
-            headers: {
-                authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                "Content-Type": "application/json; charset=UTF-8" 
-            },
-        });
-
-        if (!res.ok) throw new Error(res.status.toString());
-
-        return await res.json();
-    }
-
-    async removeLike(cardId: string): Promise<ApiCard> {
-        
-        const res: Response = await fetch(`${this.apiUrl}cards/${cardId}/likes`, {
-            method: "DELETE",
-            headers: {
-                authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                "Content-Type": "application/json; charset=UTF-8" 
-            },
-        });
-
-        if (!res.ok) throw new Error(res.status.toString());
-
-        return await res.json();
-    }
-
-    async deleteCard(cardId: string): Promise<void> {
-        
-        const res: Response = await fetch(`${this.apiUrl}cards/${cardId}`, {
-            method: "DELETE",
-            headers: {
-                authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                "Content-Type": "application/json; charset=UTF-8" 
-            }
-        });
-    }
-
-    async editAvatar(avatar: string): Promise<ApiUserInfo> {
-
-        const res: Response = await fetch(`${this.apiUrl}users/me/avatar`, {
-            method: "PATCH",
-            headers: {
-                authorization: "ff6ba0a7-3c3d-4270-8310-5f0e5ff66a4a",
-                "Content-Type": "application/json; charset=UTF-8"
-            },
-            body: JSON.stringify({
-                avatar: avatar,
-            })
-        })
-
-        if (!res.ok) throw new Error(res.status.toString());
-
-        return await res.json();
-    }
+  editAvatar(avatar: string): Promise<ApiUserInfo> {
+    return this.request<ApiUserInfo>("users/me/avatar", {
+      method: "PATCH",
+      body: JSON.stringify({ avatar }),
+    });
+  }
 }

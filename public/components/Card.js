@@ -42,7 +42,6 @@ export class Card {
         if (this.cardInfo.isLiked)
             this.toggleLikeBtn();
         this.setEventListeners();
-        console.log(this.cardInfo);
         return this.cardElement;
     }
     updateCardInfo(cardInfo) {
