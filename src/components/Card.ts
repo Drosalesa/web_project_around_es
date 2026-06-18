@@ -19,7 +19,8 @@ export class Card {
         cardTemplateSelector: string,
         handleCardClick: EventFunction,
         handleLike: EventFunction,
-        handleRemove: EventFunction) {
+        handleRemove: EventFunction,
+        currentUserId: string) {
         this.cardTemplate = document.querySelector(cardTemplateSelector) as HTMLTemplateElement;
         this.cardElement = this.cardTemplate.content.querySelector(".card")!.cloneNode(true) as HTMLElement;
         this.cardTitle = this.cardElement.querySelector(".card__title") as HTMLElement;
@@ -30,6 +31,9 @@ export class Card {
         this.cardLikeBtn = this.cardElement.querySelector(".card__like-button") as HTMLButtonElement;
         this.cardDeleteBtn = this.cardElement.querySelector(".card__delete-button") as HTMLButtonElement;
         this.cardInfo = card;
+        if (this.cardInfo.owner !== currentUserId) {
+            this.cardDeleteBtn.style.display = `none`;
+        }
         this.handleCardClick = handleCardClick;
         this.handleLike = handleLike;
         this.handleRemove = handleRemove;

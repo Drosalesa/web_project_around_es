@@ -54,14 +54,10 @@ export class Api {
             method: "DELETE",
         });
     }
-    async deleteCard(cardId) {
-        const res = await fetch(`${this.apiUrl}cards/${cardId}`, {
-            method: "DELETE",
-            headers: this.headers,
+    deleteCard(cardId) {
+        return this.request(`cards/${cardId}`, {
+            method: "DELETE"
         });
-        if (!res.ok) {
-            throw new Error(`HTTP ${res.status}`);
-        }
     }
     editAvatar(avatar) {
         return this.request("users/me/avatar", {

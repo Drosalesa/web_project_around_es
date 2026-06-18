@@ -30,4 +30,6 @@
 
 # Se generó feedback para el usuario mientras se cargan las respuestas del servidor
 
+# Se deshabilitó la función de borrar tarjetas si la tarjeta no fue creada por el mismo usuario
+
 # https://drosalesa.github.io/web_project_around_es/

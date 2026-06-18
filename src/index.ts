@@ -34,6 +34,8 @@ try {
     apiResponse.getCards(),
   ]);
 
+  const currentUserId = apiUser._id;
+
   userInfo.setUserInfo({
     name: apiUser.name,
     description: apiUser.about,
@@ -76,7 +78,8 @@ try {
         )
         confirmationPopup.open();
         confirmationPopup.setEventListeners();
-        }
+      },
+      currentUserId,
       );
       const cardElement = card.getCardElement();
       cardList.addItem(cardElement);
@@ -92,15 +95,13 @@ try {
 const newCardPopup = new PopupWithForm(async (data: FormValues) => {
   newCardPopup.renderLoading(true);
   try {
-    const card = new Card(
-      {
+    const cardInfo = await apiResponse.postNewCard({
         name: data.name,
-        link: data.link,
-        isLiked: false,
-        _id: "",
-        owner: "",
-        createdAt: ""
-      },
+        link: data.link
+    });
+       
+    const card = new Card(
+      cardInfo,
       cardTemplate,
       () => {
         const popupImage = new PopupWithImage({
@@ -117,23 +118,21 @@ const newCardPopup = new PopupWithForm(async (data: FormValues) => {
         },
       () => {
           const confirmationPopup = new PopupWithConfirmation(
-            () => {
-              apiResponse.deleteCard(card.getCardInfo()._id);
+            async () => {
+              try {
+              await apiResponse.deleteCard(card.getCardInfo()._id);
               card.removeCard();
               confirmationPopup.close();
+              } catch (err) {
+                console.log(err);
+              }
             },
             delConfSelector
           )
           confirmationPopup.open();
           confirmationPopup.setEventListeners();
-        });
-      const cardElement = card.getCardElement();
-      cardList.addItem(cardElement);
-      const cardInfo = await apiResponse.postNewCard({
-        name: data.name,
-        link: data.link
-      });
-      card.updateCardInfo(cardInfo);
+        }, apiUser._id);
+      cardList.addItem(card.getCardElement());
       newCardPopup.close();
       newCardPopup.resetForm();
   } catch (err) {

@@ -9,7 +9,7 @@ export class Card {
     handleCardClick;
     handleLike;
     handleRemove;
-    constructor(card, cardTemplateSelector, handleCardClick, handleLike, handleRemove) {
+    constructor(card, cardTemplateSelector, handleCardClick, handleLike, handleRemove, currentUserId) {
         this.cardTemplate = document.querySelector(cardTemplateSelector);
         this.cardElement = this.cardTemplate.content.querySelector(".card").cloneNode(true);
         this.cardTitle = this.cardElement.querySelector(".card__title");
@@ -20,6 +20,9 @@ export class Card {
         this.cardLikeBtn = this.cardElement.querySelector(".card__like-button");
         this.cardDeleteBtn = this.cardElement.querySelector(".card__delete-button");
         this.cardInfo = card;
+        if (this.cardInfo.owner !== currentUserId) {
+            this.cardDeleteBtn.style.display = `none`;
+        }
         this.handleCardClick = handleCardClick;
         this.handleLike = handleLike;
         this.handleRemove = handleRemove;

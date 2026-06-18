@@ -17,6 +17,7 @@ try {
         apiResponse.getUser(),
         apiResponse.getCards(),
     ]);
+    const currentUserId = apiUser._id;
     userInfo.setUserInfo({
         name: apiUser.name,
         description: apiUser.about,
@@ -51,7 +52,7 @@ try {
                 }, delConfSelector);
                 confirmationPopup.open();
                 confirmationPopup.setEventListeners();
-            });
+            }, currentUserId);
             const cardElement = card.getCardElement();
             cardList.addItem(cardElement);
         },
@@ -64,14 +65,11 @@ catch (error) {
 const newCardPopup = new PopupWithForm(async (data) => {
     newCardPopup.renderLoading(true);
     try {
-        const card = new Card({
+        const cardInfo = await apiResponse.postNewCard({
             name: data.name,
-            link: data.link,
-            isLiked: false,
-            _id: "",
-            owner: "",
-            createdAt: ""
-        }, cardTemplate, () => {
+            link: data.link
+        });
+        const card = new Card(cardInfo, cardTemplate, () => {
             const popupImage = new PopupWithImage({
                 name: data.name,
                 link: data.link
@@ -83,21 +81,20 @@ const newCardPopup = new PopupWithForm(async (data) => {
             card.updateCardInfo(newInfo);
             console.log(card.getCardInfo());
         }, () => {
-            const confirmationPopup = new PopupWithConfirmation(() => {
-                apiResponse.deleteCard(card.getCardInfo()._id);
-                card.removeCard();
-                confirmationPopup.close();
+            const confirmationPopup = new PopupWithConfirmation(async () => {
+                try {
+                    await apiResponse.deleteCard(card.getCardInfo()._id);
+                    card.removeCard();
+                    confirmationPopup.close();
+                }
+                catch (err) {
+                    console.log(err);
+                }
             }, delConfSelector);
             confirmationPopup.open();
             confirmationPopup.setEventListeners();
-        });
-        const cardElement = card.getCardElement();
-        cardList.addItem(cardElement);
-        const cardInfo = await apiResponse.postNewCard({
-            name: data.name,
-            link: data.link
-        });
-        card.updateCardInfo(cardInfo);
+        }, apiUser._id);
+        cardList.addItem(card.getCardElement());
         newCardPopup.close();
         newCardPopup.resetForm();
     }

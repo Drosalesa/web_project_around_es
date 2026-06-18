@@ -73,27 +73,22 @@ export class Api {
       : this.addLike(cardId);
   }
 
-  addLike(cardId: string): Promise<ApiCard> {
+  private addLike(cardId: string): Promise<ApiCard> {
     return this.request<ApiCard>(`cards/${cardId}/likes`, {
       method: "PUT",
     });
   }
 
-  removeLike(cardId: string): Promise<ApiCard> {
+  private removeLike(cardId: string): Promise<ApiCard> {
     return this.request<ApiCard>(`cards/${cardId}/likes`, {
       method: "DELETE",
     });
   }
 
-  async deleteCard(cardId: string): Promise<void> {
-    const res = await fetch(`${this.apiUrl}cards/${cardId}`, {
-      method: "DELETE",
-      headers: this.headers,
+  deleteCard(cardId: string): Promise<void> {
+    return this.request<void>(`cards/${cardId}`, {
+        method: "DELETE"
     });
-
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status}`);
-    }
   }
 
   editAvatar(avatar: string): Promise<ApiUserInfo> {

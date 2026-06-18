@@ -6,7 +6,7 @@ export class PopupWithImage extends Popup {
     constructor({link, name}: CardData, popupSelector: string) {
         super(popupSelector);
         this.popupElement.querySelector(".popup__image")?.setAttribute("src", link);
-        this.popupElement.querySelector(".popup__image")?.setAttribute("alt", link);
+        this.popupElement.querySelector(".popup__image")?.setAttribute("alt", name);
         this.popupElement.querySelector(".popup__caption")!.textContent = name;
     }
 }
