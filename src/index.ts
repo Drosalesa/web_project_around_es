@@ -112,9 +112,12 @@ const newCardPopup = new PopupWithForm(async (data: FormValues) => {
         popupImage.setEventListeners();
       },
       async () => {
+          try{
           const newInfo = await apiResponse.toggleLike(card.getCardInfo()._id, card.getCardInfo().isLiked);
           card.updateCardInfo(newInfo);
-          console.log(card.getCardInfo());
+          } catch (err) {
+            console.log(err);
+          }
         },
       () => {
           const confirmationPopup = new PopupWithConfirmation(
@@ -158,14 +161,14 @@ addCardBtn?.addEventListener("click", () => {
 const editProfilePopup = new PopupWithForm (async (data: FormValues) => {
   editProfilePopup.renderLoading(true);
   try {
+    await apiResponse.patchUser({
+      name: data.name,
+      description: data.description 
+    });
     userInfo.setUserInfo({
     name: data.name,
     description: data.description,
     avatar: apiUser.avatar 
-    });
-    await apiResponse.patchUser({
-      name: data.name,
-      description: data.description 
     });
     editProfilePopup.close();
   } catch (err) {
